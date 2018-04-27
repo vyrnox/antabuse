@@ -21,6 +21,6 @@ defmodule Abuse.MixProject do
 
   # Run "mix help deps" to learn about dependencies.
   def deps do
-    [{:nostrum, "~> 0.1"}]
+    [{:nostrum, git: "https://github.com/Kraigie/nostrum.git"}]
   end
 end
