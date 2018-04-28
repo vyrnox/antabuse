@@ -13,11 +13,29 @@ defmodule Antabuse.Consumer do
     String.starts_with?(msg.content, @prefix)
   end
 
+  defp execute(["!clear", channel], msg, guild) do
+    IO.puts "Going to clear: #{channel}"
+    {channel_id, _} = Integer.parse(String.replace(channel, ~r/[^\d]/, ""))
+    ckm_task = Task.async fn ->
+      Api.get_channel_messages!(channel_id, :infinity, {})
+    end
+     
+    evidence = Task.await ckm_task
+
+    Enum.each evidence, fn message -> 
+      IO.puts "> #{message.author} #{message.content} #{message.id}" 
+      Api.delete_message(channel_id, message.id)
+    end
+  end
+
   defp execute(["!mute", username], msg, guild) do
     IO.puts "Got mute command: #{username}"
-    {:ok, member} = Api.get_guild_member(guild.id, username)
-    IO.puts "Got member: #{member.username} with role ID list: #{member.roles}"
+    {user_id, _} = Integer.parse(String.replace(username, ~r/[^\d]/, ""))
+    {guild_id, _} = Integer.parse(guild.id)
+    {:ok, member} = Api.get_guild_member(guild_id, user_id)
+    IO.puts "Got member: #{member.user.username}"
     # Save user's role state.
+    roles = member.roles
     # Remove all user's roles.
     # Add mute role to user.
     # Deafen and mute the user.
