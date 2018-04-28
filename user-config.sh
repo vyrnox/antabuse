@@ -2,7 +2,7 @@
 
 if [ ! -e "/home/vagrant/provisioned.lock" ]
 then
-    echo "DISCORD_API_KEY=${DISCORD_API_KEY}" >> /home/vagrant/.profile
+    echo "export DISCORD_API_KEY=${DISCORD_API_KEY}" >> /home/vagrant/.profile
     echo "Running 'mix local.hex --force'"
     mix local.hex --force
     echo "Running 'mix local.rebar --force'"
