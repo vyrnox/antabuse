@@ -17,3 +17,9 @@ of commands to change user roles and perform other moderation tasks.
 ```!unmute should remove the mute role and restore all the roles they had.```
 
 ## Running ##
+
+With Vagrant:
+
+    $ DISCORD_API_KEY=yourapikey vagrant up
+
+

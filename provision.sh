@@ -12,6 +12,6 @@ then
     echo "Installing esl-erlang and elixir."
     apt-get -y install esl-erlang elixir
     echo "Executing user-config.sh as vagrant."
-    su -c "source /vagrant/user-config.sh" vagrant
+    su -c "DISCORD_API_KEY=${DISCORD_API_KEY} source /vagrant/user-config.sh" vagrant
     touch /home/vagrant/provisioned.lock
 fi

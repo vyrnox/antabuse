@@ -28,3 +28,9 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+config :nostrum,
+  token: System.get_env("DISCORD_API_KEY"),
+  num_shards: :auto
+
+config :logger, :console, metadata: [:shard]
