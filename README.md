@@ -20,6 +20,13 @@ of commands to change user roles and perform other moderation tasks.
 
 With Vagrant:
 
-    $ DISCORD_API_KEY=yourapikey vagrant up
+    $ DISCORD_API_KEY=token vagrant up
 
+With Elixir:
 
+    $ mix local.hex --force
+    $ mix local.rebar --force
+    $ MIX_ENV=prod mix do deps.get
+    $ MIX_ENV=prod mix do compile
+    $ export DISCORD_API_KEY=token
+    $ iex -S mix
