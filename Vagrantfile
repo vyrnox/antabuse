@@ -3,7 +3,7 @@
 
 Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
 
-discord_api_key = ENV['DISCORD_API_KEY'] ? ENV['DISCORD_API_KEY'] : ''
+discord_api_key = ENV['DISCORD_API_KEY'] ? ENV['DISCORD_API_KEY'] : 'NONESET'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/xenial64"
