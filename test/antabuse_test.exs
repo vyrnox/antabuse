@@ -1,8 +1,8 @@
-defmodule AbuseTest do
+defmodule AntabuseTest do
   use ExUnit.Case
-  doctest Abuse
+  doctest Antabuse
 
   test "greets the world" do
-    assert Abuse.hello() == :world
+    assert Antabuse.hello() == :world
   end
 end
