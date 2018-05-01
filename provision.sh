@@ -9,8 +9,8 @@ then
     echo "Updating and upgrading packages."
     apt-get update
     apt-get -y upgrade
-    echo "Installing esl-erlang and elixir."
-    apt-get -y install esl-erlang elixir
+    echo "Installing esl-erlang, elixir and redis."
+    apt-get -y install esl-erlang elixir redis-server
     echo "Executing user-config.sh as vagrant."
     su -c "DISCORD_API_KEY=${DISCORD_API_KEY} source /vagrant/user-config.sh" vagrant
     touch /home/vagrant/provisioned.lock

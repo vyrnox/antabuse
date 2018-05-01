@@ -20,10 +20,11 @@ defmodule Antabuse.Command.Dispatch do
         command_type = Util.get_command_type(Enum.at(message_content, 0))
         case command_type do
           "channel" ->
-            IO.puts "Using channel command handler: #{message_content}"
-            Channel.execute(message_content, guild)
+            IO.puts "Using channel command handler: #{Enum.at(message_content, 0)} #{Enum.at(message_content, 1)}"
+            Channel.execute(message_content, message, guild)
           "user" ->
-            User.execute(message_content, guild)
+            IO.puts "Using user command handler: #{Enum.at(message_content, 0)} #{Enum.at(message_content, 1)}"
+            User.execute(message_content, message, guild)
           _ -> ""
         end
 
@@ -34,4 +35,3 @@ defmodule Antabuse.Command.Dispatch do
   end
 
 end
-

@@ -7,10 +7,12 @@ defmodule Antabuse.Application do
 
   def start(_type, _args) do
     IO.puts("We have #{System.schedulers_online()} schedulers online in the VM.")
+
     import Supervisor.Spec, warn: false
 
     children = [
-      Consumer
+      Consumer,
+      {Redix, [[], [name: :redix]]}
     ]
 
     opts = [strategy: :one_for_one]
