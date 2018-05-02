@@ -1,26 +1,20 @@
 defmodule Antabuse.Command.Util do
 
-  @prefix "!"
-
-  def valid_command?(msg) do
-    String.starts_with?(msg.content, @prefix)
-  end
-
-  def valid_user?(guild, sender) do
-    true
-  end
-
   # create a command array for dispatcher.
-
   def get_command_type(command) do
     IO.puts "Got command: #{command}"
+
+    # Associate commands with categories for different modules:
     case command do
       "!clear" -> "channel"
       "!mute" -> "user"
       "!unmute" -> "user"
+      "!modon" -> "guild"
+      "!modoff" -> "guild"
+      "!blacklist" -> "guild"
+      "!whitelist" -> "guild"
       _ -> "bad"
     end
   end
 
 end
-
