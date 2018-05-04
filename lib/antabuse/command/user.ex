@@ -1,5 +1,6 @@
 defmodule Antabuse.Command.User do
   alias Nostrum.Api
+  alias Antabuse.Auth.Check
   alias Antabuse.DB.KV
 
   # find the mute role.
@@ -31,16 +32,20 @@ defmodule Antabuse.Command.User do
     {:ok, member} = Api.get_guild_member(guild_id, user_id)
     IO.puts "Got member: #{member.user.username}"
 
-    # Save user's role state.
-    KV.user_save_roles(guild, member)
+    if ! Check.rule_exists(guild, msg.author.id, user_id, "!mute") do
+      # Save user's role state.
+      KV.user_save_roles(guild, member)
 
-    mute_role_id = get_mute_role(guild)
-    IO.puts "Mute role id: #{mute_role_id}"
+      mute_role_id = get_mute_role(guild)
+      IO.puts "Mute role id: #{mute_role_id}"
 
-    # Remove all user's roles, mute and deafen
-    cripple(guild, member, mute_role_id)
+      # Remove all user's roles, mute and deafen
+      cripple(guild, member, mute_role_id)
 
-    Api.create_message(msg.channel_id, content: "Crippled: #{username}")
+      Api.create_message(msg.channel_id, content: "Crippled: #{username}")
+    else
+      Api.create_message(msg.channel_id, content: "You're blocked from using that command on #{username}")
+    end
   end
 
   def execute(["!unmute", username], msg, guild) do
@@ -49,10 +54,14 @@ defmodule Antabuse.Command.User do
     {guild_id, _} = Integer.parse(guild.id)
     {:ok, member} = Api.get_guild_member(guild_id, user_id)
 
-    # Restore the user's roles, unmute and undeafen
-    uncripple(guild, member)
+    if ! Check.rule_exists(guild, msg.author.id, user_id, "!unmute") do
+      # Restore the user's roles, unmute and undeafen
+      uncripple(guild, member)
 
-    Api.create_message(msg.channel_id, content: "Restored: #{username}")
+      Api.create_message(msg.channel_id, content: "Restored: #{username}")
+    else
+      Api.create_message(msg.channel_id, content: "You're blocked from using that command on #{username}")
+    end
   end
 
 end

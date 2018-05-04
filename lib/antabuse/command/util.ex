@@ -13,6 +13,8 @@ defmodule Antabuse.Command.Util do
       "!modoff" -> "guild"
       "!blacklist" -> "guild"
       "!whitelist" -> "guild"
+      "!modrule" -> "guild"
+      "!modchan" -> "guild"
       _ -> "bad"
     end
   end
