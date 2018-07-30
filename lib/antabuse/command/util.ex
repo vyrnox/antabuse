@@ -15,6 +15,8 @@ defmodule Antabuse.Command.Util do
       "!whitelist" -> "guild"
       "!modrule" -> "guild"
       "!modchan" -> "guild"
+      "!backup" -> "guild"
+      "!restore" -> "guild"
       _ -> "bad"
     end
   end

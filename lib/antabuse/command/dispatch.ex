@@ -2,6 +2,7 @@ defmodule Antabuse.Command.Dispatch do
 
   alias Antabuse.Command.{Channel, Guild, User, Util}
   alias Antabuse.Auth.Check
+  require Logger
 
 
   def dispatch_command(message, guild) do
@@ -22,8 +23,7 @@ defmodule Antabuse.Command.Dispatch do
   end
 
   def handle_command(message, guild) do
-    # debugging
-    IO.puts "Got: #{message.author.id} : #{message.content}"
+    Logger.debug "Got: #{message.author.id} : #{message.content}"
 
     if ! Check.is_bot(message.author.id) do
       # if owner and valid command, dispatch

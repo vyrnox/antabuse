@@ -2,6 +2,7 @@ defmodule Antabuse.Command.User do
   alias Nostrum.Api
   alias Antabuse.Auth.Check
   alias Antabuse.DB.KV
+  require Logger
 
   # find the mute role.
   def get_mute_role(guild) do
@@ -26,18 +27,18 @@ defmodule Antabuse.Command.User do
   end
 
   def execute(["!mute", username], msg, guild) do
-    IO.puts "Got mute command: #{username}"
+    Logger.debug "Got mute command: #{username}"
     {user_id, _} = Integer.parse(String.replace(username, ~r/[^\d]/, ""))
     {guild_id, _} = Integer.parse(guild.id)
     {:ok, member} = Api.get_guild_member(guild_id, user_id)
-    IO.puts "Got member: #{member.user.username}"
+    Logger.debug "Got member: #{member.user.username}"
 
     if ! Check.rule_exists(guild, msg.author.id, user_id, "!mute") do
       # Save user's role state.
       KV.user_save_roles(guild, member)
 
       mute_role_id = get_mute_role(guild)
-      IO.puts "Mute role id: #{mute_role_id}"
+      Logger.debug "Mute role id: #{mute_role_id}"
 
       # Remove all user's roles, mute and deafen
       cripple(guild, member, mute_role_id)
@@ -49,7 +50,7 @@ defmodule Antabuse.Command.User do
   end
 
   def execute(["!unmute", username], msg, guild) do
-    IO.puts "Got unmute command: #{username}"
+    Logger.debug "Got unmute command: #{username}"
     {user_id, _} = Integer.parse(String.replace(username, ~r/[^\d]/, ""))
     {guild_id, _} = Integer.parse(guild.id)
     {:ok, member} = Api.get_guild_member(guild_id, user_id)

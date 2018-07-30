@@ -3,6 +3,7 @@ defmodule Antabuse.DB.SB do
 end
 
 defmodule Antabuse.DB.KV do
+  require Logger
 
   def serialize(data) do
     struct = %Antabuse.DB.SB{value: data}
@@ -19,14 +20,14 @@ defmodule Antabuse.DB.KV do
   # easier.
 
   def guild_modrule_exists(guild, member_id, target_id, rule) do
-    IO.puts("Checking rule: #{rule} from #{member_id} to #{target_id} on #{guild.name}.")
+    Logger.debug "Checking rule: #{rule} from #{member_id} to #{target_id} on #{guild.name}."
     {:ok, modrule_data} = Redix.command(:redix, ["GET", "#{guild.id}:modrules:#{member_id}:#{target_id}"])
     modrule_data = if modrule_data do deserialize(modrule_data) else [] end
     if Enum.find modrule_data, fn mod_rule -> mod_rule == rule end do true else false end
   end
 
   def guild_add_modrule(guild, member_id, target_id, rule) do
-    IO.puts("Adding rule: #{rule} from #{member_id} to #{target_id} on #{guild.name}.")
+    Logger.debug "Adding rule: #{rule} from #{member_id} to #{target_id} on #{guild.name}."
     {:ok, modrule_data} = Redix.command(:redix, ["GET", "#{guild.id}:modrules:#{member_id}:#{target_id}"])
     modrule_data = if modrule_data do deserialize(modrule_data) else [] end
     if ! Enum.find modrule_data, fn mod_rule -> mod_rule == rule end do
@@ -45,25 +46,40 @@ defmodule Antabuse.DB.KV do
   end
 
   def guild_fetch_modchannel(guild) do
-    IO.puts("Fetching #{guild.name}'s modchan.")
+    Logger.debug "Fetching #{guild.name}'s modchan."
     {:ok, modchan} = Redix.command(:redix, ["GET", "#{guild.id}:modchan"])
     modchan
   end
 
   def guild_set_modchannel(guild, channel_id) do
-    IO.puts("Setting #{guild.name}'s modchan to #{channel_id}.")
+    Logger.debug "Setting #{guild.name}'s modchan to #{channel_id}."
     {:ok, modchan} = Redix.command(:redix, ["SET", "#{guild.id}:modchan", "#{channel_id}"])
     modchan
   end
 
+  def guild_fetch_roles(guild) do
+    Logger.debug "Fetching #{guild.name}'s roles."
+    {:ok, role_data} = Redix.command(:redix, ["GET", "#{guild.id}:backup:roles"])
+    deserialize(role_data)
+  end
+
+  def guild_set_backup(uuid, backup) do
+    Redix.command(:redix, ["SET", "backup:#{uuid}", serialize(backup)])
+  end
+
+  def guild_fetch_backup(uuid) do
+    {:ok, backup_data} = Redix.command(:redix, ["GET", "backup:#{uuid}"])
+    deserialize(backup_data)
+  end
+
   def guild_fetch_blacklist(guild) do
-    IO.puts("Fetching #{guild.name}'s blacklist.")
+    Logger.debug "Fetching #{guild.name}'s blacklist."
     {:ok, blist_data} = Redix.command(:redix, ["GET", "#{guild.id}:blacklist"])
     deserialize(blist_data)
   end
 
   def guild_add_blacklist(guild, member_id) do
-    IO.puts("Adding #{member_id} to #{guild.name}'s blacklist.")
+    Logger.debug "Adding #{member_id} to #{guild.name}'s blacklist."
     {:ok, blist_data} = Redix.command(:redix, ["GET", "#{guild.id}:blacklist"])
     blist_data = if blist_data do deserialize(blist_data) else [] end
     if ! Enum.find blist_data, fn member -> member == member_id end do
@@ -86,13 +102,13 @@ defmodule Antabuse.DB.KV do
   end
 
   def guild_fetch_mod_role(guild) do
-    IO.puts("Fetching #{guild.name}'s mod role.")
+    Logger.debug "Fetching #{guild.name}'s mod role."
     {:ok, role_data} = Redix.command(:redix, ["GET", "#{guild.id}:mod_role_id"])
     role_data
   end
 
   def guild_set_mod_role(guild, role_id) do
-    IO.puts("Setting #{guild.name}'s mod role.")
+    Logger.debug "Setting #{guild.name}'s mod role."
     Redix.command(:redix, ["SET", "#{guild.id}:mod_role_id", role_id])
   end
 

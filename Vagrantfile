@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
+# Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
 
 discord_api_key = ENV['DISCORD_API_KEY'] ? ENV['DISCORD_API_KEY'] : 'NONESET'
 
@@ -17,4 +17,3 @@ Vagrant.configure("2") do |config|
     vb.memory = "1024"
   end
 end
-

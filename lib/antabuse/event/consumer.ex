@@ -1,5 +1,6 @@
 defmodule Antabuse.Event.Consumer do
   use Nostrum.Consumer
+  require Logger
 
   alias Nostrum.Api
   alias Antabuse.Command.Dispatch
@@ -9,18 +10,21 @@ defmodule Antabuse.Event.Consumer do
   end
 
   def handle_event({:READY, _, _w_state}) do
-    IO.puts "In ready handle event"
     now = DateTime.utc_now
     Api.update_status(:online, "you debug", 3)
-    IO.puts("Antabuse ready at #{now.month}/#{now.day}/#{now.year} #{now.hour}:#{now.minute}:#{now.second}")
+    Logger.info "Antabuse ready at #{now.month}/#{now.day}/#{now.year} #{now.hour}:#{now.minute}:#{now.second}"
   end
 
   def handle_event({:MESSAGE_CREATE, {msg}, _ws_state}) do
     {:ok, channel} = Api.get_channel(msg.channel_id)
-    {:ok, guild} = Api.get_guild(channel.guild_id)
-    # debugging;
-    IO.puts "(#{guild.name}::#{channel.name}) #{msg.author.username}: #{msg.content}"
-    Dispatch.handle_command(msg, guild)
+    # handle DMs
+    if channel.guild_id do
+      {:ok, guild} = Api.get_guild(channel.guild_id)
+      Logger.debug "(#{guild.name}::#{channel.name}) #{msg.author.username}: #{msg.content}"
+      Dispatch.handle_command(msg, guild)
+    else
+      Logger.debug "DM: #{msg.author.username}: #{msg.content}"
+    end
   end
 
   # Default event handler, if you don't include this, your consumer WILL crash if
@@ -29,4 +33,3 @@ defmodule Antabuse.Event.Consumer do
     :noop
   end
 end
-

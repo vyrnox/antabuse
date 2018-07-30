@@ -23,7 +23,8 @@ defmodule Abuse.MixProject do
   def deps do
     [
       {:nostrum, git: "https://github.com/Kraigie/nostrum.git"},
-      {:redix, ">= 0.0.0"}
+      {:redix, ">= 0.0.0"},
+      {:uuid, "~> 1.1" }
     ]
   end
 end
